@@ -1,0 +1,30 @@
+# Para saber mais sobre testes de carga com o pacote npm loadtest acesse:
+# https://www.npmjs.com/package/loadtest
+
+name: loadtests-npm
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+env:
+  endpoint: 'ENDPOINT HTTP/HTTPS'
+  concurrentUsers: 70
+  totalRequests: 5000
+
+jobs:
+  loadtests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Instalar package loadtest
+        run: |
+          npm install loadtest
+          npx loadtest --help
+      - name: Executar testes com o package loadtest
+        run: |
+          npx loadtest -c ${{ env.concurrentUsers }} -n ${{ env.totalRequests }} -k ${{ env.endpoint }}
